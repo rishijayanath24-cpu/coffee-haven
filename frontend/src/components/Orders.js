@@ -16,7 +16,7 @@ function Orders() {
   const fetchAllOrders = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('${process.env.REACT_APP_API_URL}/api/orders');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders`);
       if (response.data.success) {
         setOrders(response.data.orders);
         setFilteredOrders(response.data.orders);
