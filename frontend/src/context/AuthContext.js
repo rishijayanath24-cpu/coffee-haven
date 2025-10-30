@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const AuthContext = createContext(null);
 
-// Mock users database (temporary until backend is ready)
+// Mock users database (temporary fallback)
 const MOCK_USERS = [
   {
     _id: '1',
@@ -32,7 +32,6 @@ export const AuthProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    // Check if user is already logged in
     const storedUser = localStorage.getItem('cafeUser');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -41,15 +40,14 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    // Save mock users to localStorage
     localStorage.setItem('mockUsers', JSON.stringify(mockUsers));
   }, [mockUsers]);
 
   const login = async (email, password) => {
     try {
-      // Try backend first
+      // ✅ Backend first
       try {
-        const response = await axios.post('${process.env.REACT_APP_API_URL}/api/auth/login', {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
           email,
           password
         }, { timeout: 2000 });
@@ -62,9 +60,7 @@ export const AuthProvider = ({ children }) => {
         }
         return { success: false, message: response.data.message };
       } catch (backendError) {
-        // If backend fails, use mock authentication
-        console.log('Backend not available, using mock authentication');
-
+        console.log('⚠️ Backend not available, using mock authentication');
         const foundUser = mockUsers.find(u => u.email === email && u.password === password);
 
         if (foundUser) {
@@ -79,23 +75,19 @@ export const AuthProvider = ({ children }) => {
           localStorage.setItem('cafeUser', JSON.stringify(userData));
           return { success: true, user: userData };
         }
-
         return { success: false, message: 'Invalid email or password' };
       }
     } catch (error) {
       console.error('Login error:', error);
-      return {
-        success: false,
-        message: 'Login failed. Please try again.'
-      };
+      return { success: false, message: 'Login failed. Please try again.' };
     }
   };
 
   const register = async (name, email, password) => {
     try {
-      // Try backend first
+      // ✅ Backend first
       try {
-        const response = await axios.post('${process.env.REACT_APP_API_URL}/api/auth/register', {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, {
           name,
           email,
           password,
@@ -110,15 +102,12 @@ export const AuthProvider = ({ children }) => {
         }
         return { success: false, message: response.data.message };
       } catch (backendError) {
-        // If backend fails, use mock registration
-        console.log('Backend not available, using mock registration');
+        console.log('⚠️ Backend not available, using mock registration');
 
-        // Check if email already exists
         if (mockUsers.find(u => u.email === email)) {
           return { success: false, message: 'Email already registered' };
         }
 
-        // Create new user
         const newUser = {
           _id: String(mockUsers.length + 1),
           name,
@@ -144,10 +133,7 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Registration error:', error);
-      return {
-        success: false,
-        message: 'Registration failed. Please try again.'
-      };
+      return { success: false, message: 'Registration failed. Please try again.' };
     }
   };
 
@@ -157,31 +143,16 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('cafeCart');
   };
 
-  const isAdmin = () => {
-    return user?.role === 'admin';
-  };
+  const isAdmin = () => user?.role === 'admin';
+  const isAuthenticated = () => user !== null;
 
-  const isAuthenticated = () => {
-    return user !== null;
-  };
-
-  const value = {
-    user,
-    login,
-    register,
-    logout,
-    isAdmin,
-    isAuthenticated,
-    loading
-  };
+  const value = { user, login, register, logout, isAdmin, isAuthenticated, loading };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };
