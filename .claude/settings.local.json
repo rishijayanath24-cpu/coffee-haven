@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)",
+      "Bash(npm start)",
+      "Bash(cat:*)",
+      "Bash(node server.js:*)",
+      "Bash(curl:*)",
+      "Bash(systemctl status:*)",
+      "Bash(mongosh cafe_oli:*)",
+      "Bash(npm install:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
