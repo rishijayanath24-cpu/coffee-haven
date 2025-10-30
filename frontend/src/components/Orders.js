@@ -16,7 +16,7 @@ function Orders() {
   const fetchAllOrders = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/orders');
+      const response = await axios.get('${process.env.REACT_APP_API_URL}/api/orders');
       if (response.data.success) {
         setOrders(response.data.orders);
         setFilteredOrders(response.data.orders);
@@ -37,7 +37,7 @@ function Orders() {
 
     setIsLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/api/orders/user/${searchEmail}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/user/${searchEmail}`);
       if (response.data.success) {
         setFilteredOrders(response.data.orders);
       }

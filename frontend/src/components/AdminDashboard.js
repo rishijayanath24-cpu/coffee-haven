@@ -29,8 +29,8 @@ const AdminDashboard = () => {
 
       // Try backend first, fallback to mock/localStorage
       try {
-        const ordersRes = await axios.get('http://localhost:5000/api/orders', { timeout: 2000 });
-        const usersRes = await axios.get('http://localhost:5000/api/auth/users', { timeout: 2000 });
+        const ordersRes = await axios.get('${process.env.REACT_APP_API_URL}/api/orders', { timeout: 2000 });
+        const usersRes = await axios.get('${process.env.REACT_APP_API_URL}/api/auth/users', { timeout: 2000 });
         orders = ordersRes.data.orders || [];
         users = usersRes.data.users || [];
       } catch (backendError) {

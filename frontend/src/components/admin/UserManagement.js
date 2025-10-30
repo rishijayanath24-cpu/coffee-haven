@@ -29,7 +29,7 @@ const UserManagement = ({ onUpdate }) => {
 
       // Try backend first, fallback to mock data
       try {
-        const response = await axios.get('http://localhost:5000/api/auth/users', { timeout: 2000 });
+        const response = await axios.get('${process.env.REACT_APP_API_URL}/api/auth/users', { timeout: 2000 });
         if (response.data.success) {
           setUsers(response.data.users);
           setFilteredUsers(response.data.users);
@@ -88,7 +88,7 @@ const UserManagement = ({ onUpdate }) => {
     try {
       // Try backend first
       try {
-        const response = await axios.post('http://localhost:5000/api/auth/register', formData, { timeout: 2000 });
+        const response = await axios.post('${process.env.REACT_APP_API_URL}/api/auth/register', formData, { timeout: 2000 });
 
         if (response.data.success) {
           alert('User added successfully!');
@@ -134,7 +134,7 @@ const UserManagement = ({ onUpdate }) => {
       try {
         // Try backend first
         try {
-          const response = await axios.delete(`http://localhost:5000/api/auth/users/${userId}`, { timeout: 2000 });
+          const response = await axios.delete(`${process.env.REACT_APP_API_URL}/api/auth/users/${userId}`, { timeout: 2000 });
 
           if (response.data.success) {
             alert('User deleted successfully!');

@@ -21,7 +21,7 @@ const OrderManagement = ({ onUpdate }) => {
   const fetchOrders = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get('http://localhost:5000/api/orders');
+      const response = await axios.get('${process.env.REACT_APP_API_URL}/api/orders');
       if (response.data.success) {
         setOrders(response.data.orders);
         setFilteredOrders(response.data.orders);
@@ -54,7 +54,7 @@ const OrderManagement = ({ onUpdate }) => {
 
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
-      const response = await axios.patch(`http://localhost:5000/api/orders/${orderId}/status`, {
+      const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}/status`, {
         status: newStatus
       });
 
